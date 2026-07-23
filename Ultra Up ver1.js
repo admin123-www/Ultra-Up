@@ -1,20 +1,40 @@
-// ゲーム起動用関数
-function startUltraUp() {
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultra Up - Online Canvas Game</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #0d0d1a;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+(function () {
   const fn = n => (typeof n === 'number' || !isNaN(n)) ? Number(n).toLocaleString() : n;
 
-  // 既存要素の削除[cite: 1]
+  // 既存要素の削除
   const ex = document.getElementById('bml-ultra-up');
   if (ex) ex.remove();
   const exDpad = document.getElementById('ps-neon-dpad-overlay');
   if (exDpad) exDpad.remove();
 
-  // 位置設定の読み込み[cite: 1]
+  // 位置設定の読み込み
   let isRightPos = false;
   try {
     isRightPos = localStorage.getItem('jg_pos_right') === 'true';
   } catch (e) {}
 
-  // メインコンテナ[cite: 1]
+  // メインコンテナ
   const c = document.createElement('div');
   c.id = 'bml-ultra-up';
   c.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;box-sizing:border-box;font-family:sans-serif;user-select:none;';
@@ -23,14 +43,14 @@ function startUltraUp() {
   wrap.style.cssText = 'position:relative;display:flex;align-items:center;gap:15px;';
   c.appendChild(wrap);
 
-  // 対戦相手用 Canvas[cite: 1]
+  // 対戦相手用 Canvas
   const opCv = document.createElement('canvas');
   opCv.width = 400;
   opCv.height = 600;
   opCv.style.cssText = 'background:#1a1a2e;box-shadow:0 0 30px rgba(0,255,255,0.4);border-radius:15px;display:none;outline:none;';
   wrap.appendChild(opCv);
 
-  // プレイヤー用 Canvas[cite: 1]
+  // プレイヤー用 Canvas
   const cv = document.createElement('canvas');
   cv.width = 400;
   cv.height = 600;
@@ -38,7 +58,7 @@ function startUltraUp() {
   cv.style.cssText = 'background:#1a1a2e;box-shadow:0 0 30px rgba(0,255,255,0.4);border-radius:15px;display:block;outline:none;';
   wrap.appendChild(cv);
 
-  // 閉じるボタン[cite: 1]
+  // 閉じるボタン
   const cb = document.createElement('button');
   cb.innerText = '✕ CLOSE';
   cb.style.cssText = 'position:absolute;bottom:12px;right:12px;padding:6px 14px;font-size:11px;letter-spacing:1px;background:rgba(255,51,102,0.15);color:#ff3366;border:1px solid rgba(255,51,102,0.6);border-radius:20px;cursor:pointer;font-weight:bold;z-index:10;backdrop-filter:blur(4px);box-shadow:0 0 10px rgba(255,51,102,0.2);transition:all 0.2s;outline:none;display:none;';
@@ -51,15 +71,6 @@ function startUltraUp() {
     cb.style.background = 'rgba(255,51,102,0.15)';
     cb.style.boxShadow = '0 0 10px rgba(255,51,102,0.2)';
     cb.style.transform = 'scale(1)';
-  };
-  cb.onclick = () => {
-    c.remove();
-    dpadWrap.remove();
-    if (aid) cancelAnimationFrame(aid);
-    window.removeEventListener('keydown', dpadKD);
-    window.removeEventListener('keyup', dpadKU);
-    document.removeEventListener('keydown', kd);
-    document.removeEventListener('keyup', ku);
   };
   wrap.appendChild(cb);
 
@@ -75,7 +86,7 @@ function startUltraUp() {
   applyPos();
   document.body.appendChild(c);
 
-  // D-Pad UI[cite: 1]
+  // D-Pad UI
   const dpadWrap = document.createElement('div');
   dpadWrap.id = 'ps-neon-dpad-overlay';
   dpadWrap.style.cssText = 'position:fixed;top:20px;left:20px;z-index:1000000;user-select:none;touch-action:none;display:flex;flex-direction:column;gap:10px;font-family:monospace,sans-serif;';
@@ -177,7 +188,7 @@ function startUltraUp() {
     el.ontouchend = r;
   });
 
-  // ゲームシステム変数[cite: 1]
+  // ゲームシステム変数
   const ctx = cv.getContext('2d');
   let b, p, s, go, k = {}, aid, pt, cl, jc, chg, tm = 0, ms = true, gm = 0, win = false, cd = 0, nr = false, ve = false, ftm = 0, bigTm = 0, monoTm = 0, airWalkTimer = 0, allStopTimer = 0, yellowWorldTimer = 0, vePage = 0, lh = 0, rh = 0, plf = false, prf = false, dc = 2, uc = 0;
   let hi = 0, bt = 999999, bt100 = 999999, gn = 0, cp = 0, tp = 0, storyMax = 1, storyStage = 1, storyBannerTimer = 0;
@@ -242,7 +253,7 @@ function startUltraUp() {
   let peer = null, conn = null, op = null, isHost = false, netStatus = '', roomCode = '', bp = 0, bpUpdated = false, matchResult = '';
   let enc = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  // ローカルストレージ復元[cite: 1]
+  // ローカルストレージ復元
   try {
     let oh = localStorage.getItem('jg_hi') ? parseInt(localStorage.getItem('jg_hi'), 10) : 0;
     hi = localStorage.getItem('jg_hi_v2') ? parseInt(localStorage.getItem('jg_hi_v2'), 10) : oh * 2;
@@ -302,10 +313,14 @@ function startUltraUp() {
   function cs(x, y, d) {
     for (let i = 0; i < 12; i++) {
       pt.push({
-        x: x, y: y,
+        x: x,
+        y: y,
         vx: (Math.random() * 4 + 2) * d,
         vy: (Math.random() - 0.6) * 5,
-        c: '#ff9900', l: 20, ml: 20, sz: Math.random() * 2 + 1
+        c: '#ff9900',
+        l: 20,
+        ml: 20,
+        sz: Math.random() * 2 + 1
       });
     }
   }
@@ -404,30 +419,57 @@ function startUltraUp() {
       return;
     }
     tickets--;
-    try { localStorage.setItem('jg_tickets', tickets); } catch (e) {}
+    try {
+      localStorage.setItem('jg_tickets', tickets);
+    } catch (e) {}
 
     let pool = [];
-    for (let i = 0; i < bColors.length; i++) if (!ownedColors[i]) pool.push({ cat: 'col', idx: i, name: '[カラー] ' + bColors[i].n });
-    for (let i = 0; i < bPatterns.length; i++) if (!ownedPatterns[i]) pool.push({ cat: 'pat', idx: i, name: '[模様] ' + bPatterns[i].n });
-    for (let i = 0; i < bTrails.length; i++) if (!ownedTrails[i]) pool.push({ cat: 'tra', idx: i, name: '[トレイル] ' + bTrails[i].n });
+    for (let i = 0; i < bColors.length; i++) {
+      if (!ownedColors[i]) pool.push({ cat: 'col', idx: i, name: '[カラー] ' + bColors[i].n });
+    }
+    for (let i = 0; i < bPatterns.length; i++) {
+      if (!ownedPatterns[i]) pool.push({ cat: 'pat', idx: i, name: '[模様] ' + bPatterns[i].n });
+    }
+    for (let i = 0; i < bTrails.length; i++) {
+      if (!ownedTrails[i]) pool.push({ cat: 'tra', idx: i, name: '[トレイル] ' + bTrails[i].n });
+    }
 
     if (pool.length > 0) {
       let picked = pool[Math.floor(Math.random() * pool.length)];
       if (picked.cat === 'col') {
-        ownedColors[picked.idx] = 1; curColorIdx = picked.idx; gachaTab = 0;
+        ownedColors[picked.idx] = 1;
+        curColorIdx = picked.idx;
+        gachaTab = 0;
         gachaColor = bColors[picked.idx].c === 'rainbow' ? '#ff00ff' : bColors[picked.idx].c;
-        try { localStorage.setItem('jg_owned_colors', ownedColors.join(',')); localStorage.setItem('jg_cur_color', curColorIdx); } catch (e) {}
+        try {
+          localStorage.setItem('jg_owned_colors', ownedColors.join(','));
+          localStorage.setItem('jg_cur_color', curColorIdx);
+        } catch (e) {}
       } else if (picked.cat === 'pat') {
-        ownedPatterns[picked.idx] = 1; curPatternIdx = picked.idx; gachaTab = 1; gachaColor = '#00ffaa';
-        try { localStorage.setItem('jg_owned_patterns', ownedPatterns.join(',')); localStorage.setItem('jg_cur_pattern', curPatternIdx); } catch (e) {}
+        ownedPatterns[picked.idx] = 1;
+        curPatternIdx = picked.idx;
+        gachaTab = 1;
+        gachaColor = '#00ffaa';
+        try {
+          localStorage.setItem('jg_owned_patterns', ownedPatterns.join(','));
+          localStorage.setItem('jg_cur_pattern', curPatternIdx);
+        } catch (e) {}
       } else if (picked.cat === 'tra') {
-        ownedTrails[picked.idx] = 1; curTrailIdx = picked.idx; gachaTab = 2; gachaColor = '#ff9900';
-        try { localStorage.setItem('jg_owned_trails', ownedTrails.join(',')); localStorage.setItem('jg_cur_trail', curTrailIdx); } catch (e) {}
+        ownedTrails[picked.idx] = 1;
+        curTrailIdx = picked.idx;
+        gachaTab = 2;
+        gachaColor = '#ff9900';
+        try {
+          localStorage.setItem('jg_owned_trails', ownedTrails.join(','));
+          localStorage.setItem('jg_cur_trail', curTrailIdx);
+        } catch (e) {}
       }
       gachaMsg = '【新カスタマイズGET!】 ' + picked.name;
     } else {
       tickets += 2;
-      try { localStorage.setItem('jg_tickets', tickets); } catch (e) {}
+      try {
+        localStorage.setItem('jg_tickets', tickets);
+      } catch (e) {}
       gachaMsg = '【全アイテム獲得済み!】 チケット+2枚 還元!';
       gachaColor = '#00f0ff';
     }
@@ -440,20 +482,30 @@ function startUltraUp() {
       return;
     }
     tickets--;
-    try { localStorage.setItem('jg_tickets', tickets); } catch (e) {}
+    try {
+      localStorage.setItem('jg_tickets', tickets);
+    } catch (e) {}
 
     let pool = [];
-    for (let i = 0; i < ultras.length; i++) if (!ownedUltras[i]) pool.push(i);
+    for (let i = 0; i < ultras.length; i++) {
+      if (!ownedUltras[i]) pool.push(i);
+    }
 
     if (pool.length > 0) {
       let picked = pool[Math.floor(Math.random() * pool.length)];
-      ownedUltras[picked] = 1; curUltraIdx = picked;
+      ownedUltras[picked] = 1;
+      curUltraIdx = picked;
       uGachaColor = ultras[picked].c;
       uGachaMsg = '【新ウルトラGET!】 ' + ultras[picked].n;
-      try { localStorage.setItem('jg_owned_ultras', ownedUltras.join(',')); localStorage.setItem('jg_cur_ultra', curUltraIdx); } catch (e) {}
+      try {
+        localStorage.setItem('jg_owned_ultras', ownedUltras.join(','));
+        localStorage.setItem('jg_cur_ultra', curUltraIdx);
+      } catch (e) {}
     } else {
       tickets += 2;
-      try { localStorage.setItem('jg_tickets', tickets); } catch (e) {}
+      try {
+        localStorage.setItem('jg_tickets', tickets);
+      } catch (e) {}
       uGachaMsg = '【全ウルトラ獲得済み!】 チケット+2枚 還元!';
       uGachaColor = '#00f0ff';
     }
@@ -558,18 +610,43 @@ function startUltraUp() {
 
   function init(startScore = 0) {
     b = { x: 200, y: 450, vx: 0, vy: 0, r: 10, g: 0.3, jf: -10.5, tt: 0 };
-    p = []; pt = []; cl = 0;
+    p = [];
+    pt = [];
+    cl = 0;
     jc = gm === 1 ? 2 : 1;
-    chg = 0; s = startScore; tm = 0;
-    go = false; win = false; ms = false; nr = false;
-    ftm = 0; bigTm = 0; monoTm = 0;
-    airWalkTimer = 0; allStopTimer = 0; yellowWorldTimer = 0;
-    vePage = 0; bpUpdated = false; matchResult = '';
-    lh = 0; rh = 0; dc = 2; plf = false; prf = false; uc = 0;
-    storyStage = 1; storyBannerTimer = gm === 6 ? 180 : 0;
-    seenTypes = {}; platBannerTimer = 0; platBannerInfo = null;
-    showGacha = false; gachaMenuState = 0; gachaSelIndex = 0; gachaTopMsg = '';
-    showOption = false; cd = 180;
+    chg = 0;
+    s = startScore;
+    tm = 0;
+    go = false;
+    win = false;
+    ms = false;
+    nr = false;
+    ftm = 0;
+    bigTm = 0;
+    monoTm = 0;
+    airWalkTimer = 0;
+    allStopTimer = 0;
+    yellowWorldTimer = 0;
+    vePage = 0;
+    bpUpdated = false;
+    matchResult = '';
+    lh = 0;
+    rh = 0;
+    dc = 2;
+    plf = false;
+    prf = false;
+    uc = 0;
+    storyStage = 1;
+    storyBannerTimer = gm === 6 ? 180 : 0;
+    seenTypes = {};
+    platBannerTimer = 0;
+    platBannerInfo = null;
+    showGacha = false;
+    gachaMenuState = 0;
+    gachaSelIndex = 0;
+    gachaTopMsg = '';
+    showOption = false;
+    cd = 180;
 
     p.push({ x: 170, y: 500, w: 60, h: 10, t: 0, vx: 0 });
     for (let i = 1; i < 10; i++) {
@@ -585,23 +662,25 @@ function startUltraUp() {
     k[e.code] = true;
 
     if (showOption) {
-      if (['Space', 'Enter', 'KeyM', 'Escape'].includes(e.code)) showOption = false;
+      if (['Space', 'Enter', 'KeyM', 'Escape'].includes(e.code)) {
+        showOption = false;
+      }
       return;
     }
 
     if (showGacha) {
       if (gachaMenuState === 0) {
-        if (e.code === 'ArrowUp' || e.code === 'KeyW') gachaSelIndex = (gachaSelIndex + 3) % 4;
-        if (e.code === 'ArrowDown' || e.code === 'KeyS') gachaSelIndex = (gachaSelIndex + 1) % 4;
+        if (e.code === 'ArrowUp' || e.code === 'KeyW') { gachaSelIndex = (gachaSelIndex + 3) % 4; }
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') { gachaSelIndex = (gachaSelIndex + 1) % 4; }
         if (e.code === 'Space' || e.code === 'Enter') {
-          if (gachaSelIndex === 0) gachaMenuState = 1;
-          else if (gachaSelIndex === 1) gachaMenuState = 2;
-          else if (gachaSelIndex === 2) gachaTopMsg = '※期間限定ガチャは現在開催されていません';
-          else if (gachaSelIndex === 3) showGacha = false;
+          if (gachaSelIndex === 0) { gachaMenuState = 1; }
+          else if (gachaSelIndex === 1) { gachaMenuState = 2; }
+          else if (gachaSelIndex === 2) { gachaTopMsg = '※期間限定ガチャは現在開催されていません'; }
+          else if (gachaSelIndex === 3) { showGacha = false; }
         }
-        if (e.code === 'KeyM' || e.code === 'Escape') showGacha = false;
+        if (e.code === 'KeyM' || e.code === 'Escape') { showGacha = false; }
       } else {
-        if (['Space', 'Enter', 'KeyM', 'Escape'].includes(e.code)) gachaMenuState = 0;
+        if (['Space', 'Enter', 'KeyM', 'Escape'].includes(e.code)) { gachaMenuState = 0; }
       }
       return;
     }
@@ -686,13 +765,15 @@ function startUltraUp() {
       if (jc > 0 && b.vy > -9) {
         let ct = gm === 1 ? 24 : 48;
         if (chg >= ct) {
-          b.vy = b.jf * 1.6; jc--;
+          b.vy = b.jf * 1.6;
+          jc--;
           for (let i = 0; i < 25; i++) {
             let a = Math.random() * Math.PI * 2, sp = Math.random() * 5 + 3;
             pt.push({ x: b.x, y: b.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, c: '#ffff00', l: 25, ml: 25, sz: Math.random() * 4 + 2 });
           }
         } else if (chg > 0) {
-          b.vy = b.jf; jc--;
+          b.vy = b.jf;
+          jc--;
           for (let i = 0; i < 10; i++) {
             pt.push({ x: b.x, y: b.y + b.r, vx: (Math.random() - 0.5) * 4, vy: Math.random() * 3 + 1, c: '#00ffff', l: 15, ml: 15, sz: Math.random() * 2.5 + 1 });
           }
@@ -713,8 +794,9 @@ function startUltraUp() {
     if (ftm > 0) ftm--;
 
     if (airWalkTimer > 0) {
-      airWalkTimer--; jc = 999;
-      if (airWalkTimer === 0) jc = 0;
+      airWalkTimer--;
+      jc = 999;
+      if (airWalkTimer === 0) { jc = 0; }
       if (Math.random() < 0.8) {
         pt.push({ x: b.x + (Math.random() - 0.5) * b.r * 2, y: b.y + b.r, vx: (Math.random() - 0.5) * 2, vy: Math.random() * 2, c: '#ff00ff', l: 15, ml: 15, sz: Math.random() * 3 + 1 });
       }
@@ -761,9 +843,11 @@ function startUltraUp() {
         rh = 0;
       } else {
         if (k['ArrowLeft'] || k['KeyA']) {
-          b.vx -= 0.8; if (b.vx < -5.5) b.vx = -5.5;
+          b.vx -= 0.8;
+          if (b.vx < -5.5) b.vx = -5.5;
         } else if (k['ArrowRight'] || k['KeyD']) {
-          b.vx += 0.8; if (b.vx > 5.5) b.vx = 5.5;
+          b.vx += 0.8;
+          if (b.vx > 5.5) b.vx = 5.5;
         } else {
           b.vx *= 0.85;
         }
@@ -774,7 +858,7 @@ function startUltraUp() {
     if (rp) rh++; else rh = 0;
     plf = lp; prf = rp;
 
-    if (b.tt > 0) b.tt--;
+    if (b.tt > 0) { b.tt--; }
     b.vy += b.g;
     b.x += b.vx;
     b.y += b.vy;
@@ -853,7 +937,9 @@ function startUltraUp() {
           let am = p.filter(x => x.y < cv.height && x !== pl);
           let dCnt = Math.floor(p.filter(x => x.y < cv.height).length / 2);
           am.sort(() => Math.random() - 0.5);
-          for (let i = 0; i < Math.min(dCnt, am.length); i++) am[i].y = cv.height + 100;
+          for (let i = 0; i < Math.min(dCnt, am.length); i++) {
+            am[i].y = cv.height + 100;
+          }
           pl.y = cv.height + 100;
         }
 
@@ -1320,7 +1406,7 @@ function startUltraUp() {
               ctx.lineWidth = 1;
               ctx.stroke();
               ctx.fillStyle = '#666';
-              ctx.font = 'bold 9.5px sans-serif';
+              ctx.font = 'bold 13px sans-serif';
               ctx.fillText('🔒', cx, cy + 4);
             }
           }
@@ -1777,7 +1863,7 @@ function startUltraUp() {
       ctx.fillText(platBannerInfo.d, 200, topY + 35);
     }
 
-    // 途切れていた描画処理の補完 (Game Over / Clear 画面)
+    // --- 途切れていた描画処理の修復・補完 ---
     if (go) {
       ctx.fillStyle = 'rgba(0,0,0,0.85)';
       ctx.fillRect(0, 0, cv.width, cv.height);
@@ -1786,22 +1872,32 @@ function startUltraUp() {
         ctx.fillStyle = '#ffff00';
         ctx.font = 'bold 20px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('NEW RECORD!', 200, 180);
+        ctx.fillText('★ NEW RECORD! ★', 200, 230);
       }
+
       ctx.fillStyle = '#ff3366';
       ctx.font = 'bold 36px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('GAME OVER', 200, 240);
+      ctx.fillText('GAME OVER', 200, 280);
 
       ctx.fillStyle = '#fff';
       ctx.font = '18px sans-serif';
-      ctx.fillText('SCORE: ' + fn(s), 200, 290);
+      ctx.fillText('Score: ' + fn(s), 200, 330);
 
-      ctx.font = '14px sans-serif';
       ctx.fillStyle = '#aaa';
-      ctx.fillText('Rキー : リトライ', 200, 350);
-      ctx.fillText('Mキー : メニューへ戻る', 200, 380);
+      ctx.font = '14px sans-serif';
+      ctx.fillText('[R] リトライ / [M] メニューへ', 200, 380);
 
+      if (!bpUpdated) {
+        let earnedBp = Math.floor(s / 100);
+        bp += earnedBp;
+        tickets += Math.floor(earnedBp / 50);
+        bpUpdated = true;
+        try {
+          localStorage.setItem('jg_bp_v2', bp);
+          localStorage.setItem('jg_tickets', tickets);
+        } catch (e) {}
+      }
     } else if (win) {
       ctx.fillStyle = 'rgba(0,0,0,0.85)';
       ctx.fillRect(0, 0, cv.width, cv.height);
@@ -1810,30 +1906,159 @@ function startUltraUp() {
         ctx.fillStyle = '#ffff00';
         ctx.font = 'bold 20px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('NEW RECORD!', 200, 180);
+        ctx.fillText('★ NEW RECORD! ★', 200, 230);
       }
+
       ctx.fillStyle = '#00ffaa';
       ctx.font = 'bold 36px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('GAME CLEAR!', 200, 240);
+      ctx.fillText('STAGE CLEAR!', 200, 280);
 
       ctx.fillStyle = '#fff';
       ctx.font = '18px sans-serif';
-      ctx.fillText('SCORE: ' + fn(s), 200, 290);
+      ctx.fillText('Score: ' + fn(s), 200, 330);
 
-      ctx.font = '14px sans-serif';
       ctx.fillStyle = '#aaa';
-      ctx.fillText('Rキー : リトライ', 200, 350);
-      ctx.fillText('Mキー : メニューへ戻る', 200, 380);
+      ctx.font = '14px sans-serif';
+      ctx.fillText('[R] リトライ / [M] メニューへ', 200, 380);
+
+      if (!bpUpdated) {
+        let earnedBp = Math.floor(s / 50) + 100;
+        bp += earnedBp;
+        tickets += Math.floor(earnedBp / 50);
+        bpUpdated = true;
+        try {
+          localStorage.setItem('jg_bp_v2', bp);
+          localStorage.setItem('jg_tickets', tickets);
+        } catch (e) {}
+      }
     }
   }
 
-  // メインゲームループの定義と開始
+  // キャンバスクリック操作の補完処理
+  cv.addEventListener('click', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) * (cv.width / rect.width);
+    const cy = (e.clientY - rect.top) * (cv.height / rect.height);
+
+    if (showOption) {
+      if (cx >= 250 && cx <= 345 && cy >= 138 && cy <= 178) {
+        isRightPos = !isRightPos;
+        try { localStorage.setItem('jg_pos_right', isRightPos); } catch (ex) {}
+        applyPos();
+      }
+      if (cx >= 140 && cx <= 260 && cy >= 515 && cy <= 553) {
+        showOption = false;
+      }
+      return;
+    }
+
+    if (showGacha) {
+      if (gachaMenuState === 0) {
+        if (cx >= 35 && cx <= 365) {
+          if (cy >= 100 && cy <= 160) gachaMenuState = 1;
+          else if (cy >= 175 && cy <= 235) gachaMenuState = 2;
+          else if (cy >= 250 && cy <= 310) gachaTopMsg = '※期間限定ガチャは現在開催されていません';
+        }
+        if (cx >= 140 && cx <= 260 && cy >= 515 && cy <= 553) showGacha = false;
+      } else if (gachaMenuState === 1) {
+        if (cx >= 15 && cx <= 110 && cy >= 15 && cy <= 45) gachaMenuState = 0;
+        if (cx >= 90 && cx <= 310 && cy >= 190 && cy <= 228) drawGacha();
+        if (cy >= 245 && cy <= 275) {
+          if (cx >= 35 && cx <= 135) gachaTab = 0;
+          if (cx >= 150 && cx <= 250) gachaTab = 1;
+          if (cx >= 265 && cx <= 365) gachaTab = 2;
+        }
+        if (gachaTab === 0) {
+          for (let i = 0; i < 10; i++) {
+            let col = i % 5, row = Math.floor(i / 5), x = 55 + col * 70, y = 325 + row * 75;
+            if (Math.hypot(cx - x, cy - y) <= 20 && ownedColors[i]) {
+              curColorIdx = i;
+              try { localStorage.setItem('jg_cur_color', i); } catch (ex) {}
+            }
+          }
+        } else if (gachaTab === 1) {
+          for (let i = 0; i < 5; i++) {
+            let x = 55 + i * 70, y = 340;
+            if (Math.hypot(cx - x, cy - y) <= 20 && ownedPatterns[i]) {
+              curPatternIdx = i;
+              try { localStorage.setItem('jg_cur_pattern', i); } catch (ex) {}
+            }
+          }
+        } else if (gachaTab === 2) {
+          for (let i = 0; i < 5; i++) {
+            let x = 55 + i * 70, y = 340;
+            if (Math.hypot(cx - x, cy - y) <= 20 && ownedTrails[i]) {
+              curTrailIdx = i;
+              try { localStorage.setItem('jg_cur_trail', i); } catch (ex) {}
+            }
+          }
+        }
+        if (cx >= 140 && cx <= 260 && cy >= 515 && cy <= 553) gachaMenuState = 0;
+      } else if (gachaMenuState === 2) {
+        if (cx >= 15 && cx <= 110 && cy >= 15 && cy <= 45) gachaMenuState = 0;
+        if (cx >= 90 && cx <= 310 && cy >= 190 && cy <= 228) drawUltraGacha();
+        for (let i = 0; i < ultras.length; i++) {
+          let y = 230 + i * 68;
+          if (cx >= 35 && cx <= 365 && cy >= y && cy <= y + 58 && ownedUltras[i]) {
+            curUltraIdx = i;
+            try { localStorage.setItem('jg_cur_ultra', i); } catch (ex) {}
+          }
+        }
+        if (cx >= 140 && cx <= 260 && cy >= 515 && cy <= 553) gachaMenuState = 0;
+      }
+      return;
+    }
+
+    if (ve) {
+      if (cy >= 480 && cy <= 525) {
+        if (cx >= 250 && vePage === 0) vePage = 1;
+        else if (cx <= 150 && vePage === 1) vePage = 0;
+        else ve = false;
+      } else {
+        ve = false;
+      }
+      return;
+    }
+
+    if (ms) {
+      const md = [0, 6, 1, 2, 3, 4, 5];
+      md.forEach((mIdx, x) => {
+        let ty = 82 + x * 42;
+        if (cx >= 40 && cx <= 360 && cy >= ty && cy <= ty + 38) {
+          gm = mIdx;
+          init(0);
+        }
+      });
+      if (cy >= 420 && cy <= 455) {
+        if (cx >= 25 && cx <= 130) ve = true;
+        if (cx >= 145 && cx <= 250) { showGacha = true; gachaMenuState = 0; }
+        if (cx >= 265 && cx <= 370) showOption = true;
+      }
+      if (cy >= 465 && cy <= 500) {
+        if (cx >= 25 && cx <= 190) cr();
+        if (cx >= 205 && cx <= 370) jr();
+      }
+      return;
+    }
+
+    if (go || win) {
+      init(0);
+    }
+  });
+
+  // メインループ定義
   function gameLoop() {
     update();
     draw();
-    aid = requestAnimationFrame(gameLoop);
+    requestAnimationFrame(gameLoop);
   }
 
+  // 起動処理
+  ms = true;
   gameLoop();
-}
+})();
+</script>
+
+</body>
+</html>
