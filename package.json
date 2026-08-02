@@ -1,0 +1,1 @@
+{   "name": "ultra-up-cloudflare",   "version": "1.0.0",   "private": true,   "description": "Ultra Up static game deployment for Cloudflare Workers",   "scripts": {     "build": "node scripts/verify.mjs",     "dev": "wrangler dev",     "deploy": "wrangler deploy"   },   "devDependencies": {     "wrangler": "4.118.0"   } }
